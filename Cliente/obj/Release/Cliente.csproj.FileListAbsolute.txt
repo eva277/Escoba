@@ -1,0 +1,9 @@
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\bin\Release\Cliente.exe.config
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\bin\Release\Cliente.exe
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\bin\Release\Cliente.pdb
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\obj\Release\Cliente.csprojResolveAssemblyReference.cache
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\obj\Release\Cliente.Cliente.resources
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\obj\Release\Cliente.Properties.Resources.resources
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\obj\Release\Cliente.csproj.GenerateResource.Cache
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\obj\Release\Cliente.exe
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\Cliente\obj\Release\Cliente.pdb

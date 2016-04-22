@@ -1,0 +1,9 @@
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\bin\Release\WindowsFormsApplication1.exe.config
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.exe
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.pdb
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\bin\Release\WindowsFormsApplication1.exe
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\bin\Release\WindowsFormsApplication1.pdb
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Release\Server.csprojResolveAssemblyReference.cache
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.Server.resources
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Release\Server.csproj.GenerateResource.Cache
