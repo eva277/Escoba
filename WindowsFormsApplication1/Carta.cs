@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApplication1
 {
-    public class Carta
+    public class Carta : IComparable<Carta>
     {
         public string nombre;
         public int valor;
@@ -50,6 +50,13 @@ namespace WindowsFormsApplication1
         {
             return string.Format(nombre);
         }
-    }
-}
 
+
+        public int CompareTo(Carta other)
+        {
+            return this.valor.CompareTo(other.valor);
+        }
+
+    }
+
+}

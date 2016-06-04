@@ -18,3 +18,11 @@ C:\Users\kalif\Documents\Visual Studio 2015\Projects\escoba\WindowsFormsApplicat
 C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
 C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\kalif\Desktop\EvaNovoaRodriguez\Escoba\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Server.resources
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\obj\Debug\Server.csproj.GenerateResource.Cache
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\kalif\Documents\escoba\Escoba\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb

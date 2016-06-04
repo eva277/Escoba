@@ -16,3 +16,11 @@ C:\Users\kalif\Documents\Visual Studio 2015\Projects\escoba\Cliente\obj\Debug\Cl
 C:\Users\kalif\Documents\Visual Studio 2015\Projects\escoba\Cliente\obj\Debug\Cliente.csproj.GenerateResource.Cache
 C:\Users\kalif\Documents\Visual Studio 2015\Projects\escoba\Cliente\obj\Debug\Cliente.exe
 C:\Users\kalif\Documents\Visual Studio 2015\Projects\escoba\Cliente\obj\Debug\Cliente.pdb
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\bin\Debug\Cliente.exe.config
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\bin\Debug\Cliente.exe
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\bin\Debug\Cliente.pdb
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\obj\Debug\Cliente.Cliente.resources
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\obj\Debug\Cliente.Properties.Resources.resources
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\obj\Debug\Cliente.csproj.GenerateResource.Cache
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\obj\Debug\Cliente.exe
+C:\Users\kalif\Documents\escoba\Escoba\Cliente\obj\Debug\Cliente.pdb

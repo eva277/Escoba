@@ -56,7 +56,7 @@ namespace Cliente
         delegate void DelegadoRespuesta();
         private void EscribirFormulario()
         {
-            this.MessageTextBox.Text += dato + Environment.NewLine;
+            //this.MessageTextBox.Text += dato + Environment.NewLine;
         }
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -102,12 +102,13 @@ namespace Cliente
                     printCardTable(i);
                 }
 
+                Turnotimer.Enabled = true;
+
                 PlayerPanel.Visible = true;
                 TableroPanel.Visible = true;
-                MessagePanel.Visible = true;
+                //MessagePanel.Visible = true;
                 PanelConfiguration.Enabled = false;
 
-                Turnotimer.Enabled = true;
                 sw.WriteLine("#TURNO#");
                 sw.Flush();
                 turnoId = sr.ReadLine().Split('#');
@@ -115,8 +116,8 @@ namespace Cliente
                 {
                     EnterButton.Enabled = true;
                 }
-                turno= turnoId[1];
-                MessageTextBox.Text += turnoId[0] + Environment.NewLine;
+                turno = turnoId[1];
+                //MessageTextBox.Text += turnoId[0] + Environment.NewLine;
                 CountCardsPlayer();
             }
             catch (Exception error)
@@ -193,8 +194,12 @@ namespace Cliente
                             SietestextBox4.Text = sietes.ToString();
                             SieteOrostextBox5.Text = sieteOros.ToString();
 
-                            MessageTextBox.Text += d + Environment.NewLine;
+                            //MessageTextBox.Text += d + Environment.NewLine;
                             EnterButton.Enabled = false;
+                            //foreach (Button button in listButton)
+                            //{
+                            //    enableButtons(button, false);
+                            //}
                             string mesaActualizada = "";
                             RemoveCardsTable();
                             int sum = cartasMesa.Length;
@@ -215,7 +220,7 @@ namespace Cliente
                             }
                             EscobastextBox.Text = escobas.ToString();
 
-                            sw.WriteLine("#UPDATETABLE#" + mesaActualizada);
+                            sw.WriteLine("#SENDTABLEUPDATED#" + mesaActualizada);
                             sw.Flush();
                         }
                     }
@@ -253,7 +258,7 @@ namespace Cliente
         {
             Button MyButton = new Button();
             MyButton = sender as Button;
-            if (MyButton.BackgroundImage!=null)
+            if (MyButton.BackgroundImage != null)
             {
                 if (buttonClicked.Count > 0)
                 {
@@ -438,28 +443,46 @@ namespace Cliente
                 sw.Flush();
                 cartasMesa = new string[8];
                 string[] turnoId = sr.ReadLine().Split('#');
-                if (turnoId[1].Equals(idJugador))
+                try
                 {
-                    EnterButton.Enabled = true;
-                    sw.WriteLine("#ACTUALIZAMESA#");
-                    sw.Flush();
-                    cartasMesa = sr.ReadLine().Split('/');
-
-                    foreach (Button but in listButton)
+                    if (turnoId[1].Equals(idJugador))
                     {
-                        if (but.Name.Contains("Table"))
+                        EnterButton.Enabled = true;
+                        foreach (Button button in listButton)
                         {
-                            but.BackgroundImage = null;
+                            enableButtons(button, true);
+                        }
+                        sw.WriteLine("#GETTABLEUPDATED#");
+                        sw.Flush();
+                        cartasMesa = sr.ReadLine().Split('/');
+
+                        foreach (Button but in listButton)
+                        {
+                            if (but.Name.Contains("Table"))
+                            {
+                                but.BackgroundImage = null;
+                            }
+                        }
+                        for (int i = 0; i < cartasMesa.Length - 1; i++)
+                        {
+                            printCardTable(i);
+
                         }
                     }
-                    for (int i = 0; i < cartasMesa.Length - 1; i++)
+                    else
                     {
-                        printCardTable(i);
-
+                        foreach (Button button in listButton)
+                        {
+                            enableButtons(button, false);
+                        }
                     }
                 }
+                catch (Exception error)
+                {
+                    Console.WriteLine("Error: {0}", error.ToString());
+                }
                 turno = turnoId[1];
-                MessageTextBox.Text += turnoId[0] + Environment.NewLine;
+                //MessageTextBox.Text += turnoId[0] + Environment.NewLine;
 
                 CountCardsPlayer();
                 sw.WriteLine("#CHECKCARDS#" + num.ToString());
@@ -490,7 +513,7 @@ namespace Cliente
                     sw.WriteLine(puntos);
                     sw.Flush();
                     dato = sr.ReadLine();
-                    MessageTextBox.Text += dato;
+                    //MessageTextBox.Text += dato;
                     if (MessageBox.Show(dato, dato, MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
                         Close();
@@ -501,6 +524,10 @@ namespace Cliente
             {
                 Console.WriteLine("Error: {0}", error.ToString());
             }
+        }
+        private void enableButtons(Button button, Boolean enable)
+        {
+            button.Enabled = enable;
         }
     }
 }

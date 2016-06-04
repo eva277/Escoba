@@ -8,26 +8,44 @@ namespace WindowsFormsApplication1
 {
     public class Puntos
     {
-        public int escobas=0;
-        public int cartas;
-        public int oros=0;
-        public int sietes=0;
-        public int sieteOros=0;
-        public int puntosTotal=0;
-        List<Carta> listaCartas;
+        public int escobas = 0;
+        public int cartas=0;
+        public int oros = 0;
+        public int sietes = 0;
+        public int sieteOros = 0;
+        public int puntosTotal = 0;
+        List<Carta> listaCartas = new List<Carta>();
 
         public Puntos(Jugada jugada)
         {
             listaCartas = jugada.listaBaza;
-            cartas += listaCartas.Count;
+            cartas = listaCartas.Count;
 
         }
+
         public Puntos()
         {
+
         }
+
+        public void addBaza(List<Carta> trick)
+        {
+            foreach (Carta card in trick)
+            {
+                listaCartas.Add(card);
+            }
+        }
+
         public int GetNumCartas()
         {
-            return cartas;
+            if (cartas!=0)
+            {
+                return cartas;
+            }
+            else
+            {
+                return listaCartas.Count;
+            }
         }
 
         public int GetNumOros()
@@ -41,6 +59,7 @@ namespace WindowsFormsApplication1
             }
             return oros;
         }
+
         public int GetNumSietes()
         {
             foreach (Carta carta in listaCartas)
@@ -52,6 +71,7 @@ namespace WindowsFormsApplication1
             }
             return sietes;
         }
+
         public int GetSieteOros()
         {
             foreach (Carta carta in listaCartas)
