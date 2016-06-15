@@ -29,7 +29,7 @@ namespace Cliente
         string[] turnoId;
 
         string[] cartasJug = new string[3];
-        string[] cartasMesa = new string[8];
+        string[] cartasMesa = new string[12];
         List<Button> listButton = new List<Button>();
         List<Button> buttonClicked = new List<Button>();
         List<string> bazaMesa = new List<string>();
@@ -52,7 +52,12 @@ namespace Cliente
             listButton.Add(Table5);
             listButton.Add(Table6);
             listButton.Add(Table7);
+            listButton.Add(Table8);
+            listButton.Add(Table9);
+            listButton.Add(Table10);
+            listButton.Add(Table11);
         }
+
         delegate void DelegadoRespuesta();
         private void EscribirFormulario()
         {
@@ -512,12 +517,30 @@ namespace Cliente
                         + sieteOros.ToString() + "/";
                     sw.WriteLine(puntos);
                     sw.Flush();
-                    dato = sr.ReadLine();
+                    string[] winner = sr.ReadLine().Split('#');
                     //MessageTextBox.Text += dato;
-                    if (MessageBox.Show(dato, dato, MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    //if (MessageBox.Show(dato, dato, MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    //{
+                    //    Close();
+                    //}
+                    PanelConfiguration.Visible = false;
+                    PlayerPanel.Visible = false;
+                    TableroPanel.Visible = false;
+                    pictureBox1.Visible = true;
+                    this.BackColor = Color.WhiteSmoke;
+                    if (winner[1]==idJugador)
                     {
-                        Close();
+                        pictureBox1.BackgroundImage = global::Cliente.Properties.Resources.youwin;
                     }
+                    else if (winner[0].Contains("empatado"))
+                    {
+                        pictureBox1.BackgroundImage = global::Cliente.Properties.Resources.empate;
+                    }
+                    else
+                    {
+                        pictureBox1.BackgroundImage = global::Cliente.Properties.Resources.gameover;
+                    }
+                    
                 }
             }
             catch (Exception error)

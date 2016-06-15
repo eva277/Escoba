@@ -27,6 +27,8 @@ namespace WindowsFormsApplication1
         public List<Carta> listaCartasMazo;
         static Random _random = new Random();
         int cont = 0;
+        TcpListener newsock;
+        TcpClient cliente; 
 
         List<Carta> listaCartasMesa = new List<Carta>();
 
@@ -341,251 +343,260 @@ namespace WindowsFormsApplication1
 
         private void ManejarClienteAuto(TcpClient cli)
         {
-            string data;
-            NetworkStream ns = cli.GetStream();
-            StreamReader sr = new StreamReader(ns);
-            StreamWriter sw = new StreamWriter(ns);
-
-            //sw.WriteLine("#INSCRIBIR#nombre#");
-            //sw.WriteLine("#REPARTECARTAS#{cartasJugador1/cartasJugador2}#cartasMesa#");
-            //sw.WriteLine("#TURNO#turnoJugador#idturnoJugador#");
-            //sw.WriteLine("#JUGADA#cartamanoJug2#numCartasMesa#cartasMesa(cartaMesa1/cartamesa2...)#");
-            //sw.WriteLine("#ACTUALIZAMESA#cartasMesa#");
-            //sw.WriteLine("#CHECKCARDS#");
-            sw.Flush();
-            while (true)
+            try
             {
-                try
+                string data;
+                NetworkStream ns = cli.GetStream();
+                StreamReader sr = new StreamReader(ns);
+                StreamWriter sw = new StreamWriter(ns);
+
+                //sw.WriteLine("#INSCRIBIR#nombre#");
+                //sw.WriteLine("#REPARTECARTAS#{cartasJugador1/cartasJugador2}#cartasMesa#");
+                //sw.WriteLine("#TURNO#turnoJugador#idturnoJugador#");
+                //sw.WriteLine("#JUGADA#cartamanoJug2#numCartasMesa#cartasMesa(cartaMesa1/cartamesa2...)#");
+                //sw.WriteLine("#ACTUALIZAMESA#cartasMesa#");
+                //sw.WriteLine("#CHECKCARDS#");
+                //sw.Flush();
+                while (true)
                 {
-                    data = sr.ReadLine();
-                    Console.WriteLine(data); //para depuración es server
-                    String[] subdatos = data.Split('#');
-                    #region comINSCRIBIR
-                    if (subdatos[1] == "INSCRIBIR")
+                    try
                     {
+                        data = sr.ReadLine();
+                        Console.WriteLine(data); //para depuración es server
+                        String[] subdatos = data.Split('#');
+                        #region comINSCRIBIR
+                        if (subdatos[1] == "INSCRIBIR")
+                        {
 
-                        if (jugador1 == "")
-                        {
-                            jugador1 = subdatos[2];
-                            idJug1 = cli.Client.RemoteEndPoint.ToString();
-                            turno = idJug1;
-                            IpJug1 = idJug1.Split(':')[0];
-                            sw.WriteLine("Bienvenido jugador: " + jugador1);
-                            sw.Flush();
-                        }
-                        else
-                        {
-                            sw.WriteLine("Ya hay dos jugadores");
-                            sw.Flush();
-                        }
-                    }
-                    #endregion
-                    #region comREPARTIRCARTAS
-                    if (subdatos[1] == "REPARTECARTAS")
-                    {
-                        if (idJug1 == cli.Client.RemoteEndPoint.ToString())
-                        {
-                            sw.WriteLine(ListarCartasJugador1());
-                            sw.Flush();
-                        }
-                        sw.WriteLine(ListarCartasMesa());
-                        sw.Flush();
-                    }
-                    #endregion
-                    #region comESTABLECETURNO
-                    if (subdatos[1] == "TURNO")
-                    {
-                        string result = "";
-                        if (turno.Equals(idJug1))
-                        {
-                            result = "El turno es de " + jugador1 + "#" + idJug1;
-                        }
-                        if (turno.Equals("maquina"))
-                        {
-                            if (ListaManoautoPlay.Count == 0)
-                                repartecartasAuto();
-
-                            result = "El turno es de la maquina";
-                            List<List<Carta>> combinaciones = calculaCombinaciones();
-                            if (combinaciones.Count == 0)
+                            if (jugador1 == "")
                             {
-                                Carta c = chooseAutoCard();
-                                if (c == null)
+                                jugador1 = subdatos[2];
+                                idJug1 = cli.Client.RemoteEndPoint.ToString();
+                                turno = idJug1;
+                                IpJug1 = idJug1.Split(':')[0];
+                                sw.WriteLine("Bienvenido jugador: " + jugador1);
+                                sw.Flush();
+                            }
+                            else
+                            {
+                                sw.WriteLine("Ya hay dos jugadores");
+                                sw.Flush();
+                            }
+                        }
+                        #endregion
+                        #region comREPARTIRCARTAS
+                        if (subdatos[1] == "REPARTECARTAS")
+                        {
+                            if (idJug1 == cli.Client.RemoteEndPoint.ToString())
+                            {
+                                sw.WriteLine(ListarCartasJugador1());
+                                sw.Flush();
+                            }
+                            sw.WriteLine(ListarCartasMesa());
+                            sw.Flush();
+                        }
+                        #endregion
+                        #region comESTABLECETURNO
+                        if (subdatos[1] == "TURNO")
+                        {
+                            string result = "";
+                            if (turno.Equals(idJug1))
+                            {
+                                result = "El turno es de " + jugador1 + "#" + idJug1;
+                            }
+                            if (turno.Equals("maquina"))
+                            {
+                                if (ListaManoautoPlay.Count == 0)
+                                    repartecartasAuto();
+
+                                result = "El turno es de la maquina";
+                                List<List<Carta>> combinaciones = calculaCombinaciones();
+                                if (combinaciones.Count == 0)
                                 {
-                                    listaCartasMesa.Add(ListaManoautoPlay[0]);
-                                    //mesaActualizada[mesaActualizada.Length - 1] = ListaManoautoPlay[0].nombre;
-                                    ListaManoautoPlay.Remove(ListaManoautoPlay[0]);
+                                    Carta c = chooseAutoCard();
+                                    if (c == null)
+                                    {
+                                        listaCartasMesa.Add(ListaManoautoPlay[0]);
+                                        //mesaActualizada[mesaActualizada.Length - 1] = ListaManoautoPlay[0].nombre;
+                                        ListaManoautoPlay.Remove(ListaManoautoPlay[0]);
+                                    }
+                                    else
+                                    {
+                                        listaCartasMesa.Add(c);
+                                        //mesaActualizada[mesaActualizada.Length - 1] = c.nombre;
+                                        Carta toRemove = ListaManoautoPlay.Find(f => f.nombre.Equals(c.nombre));
+                                        ListaManoautoPlay.Remove(toRemove);
+                                    }
                                 }
                                 else
                                 {
-                                    listaCartasMesa.Add(c);
-                                    //mesaActualizada[mesaActualizada.Length - 1] = c.nombre;
-                                    Carta toRemove = ListaManoautoPlay.Find(f => f.nombre.Equals(c.nombre));
-                                    ListaManoautoPlay.Remove(toRemove);
-                                }
-                            }
-                            else
-                            {
-                                List<Carta> trick = chooseTrick(combinaciones);
-                                if (listaCartasMesa.Count == 0)
-                                {
-                                    PuntosautoPlay.escobas++;
-                                }
-                                PuntosautoPlay.addBaza(trick);
-                            }
-
-
-                            turno = idJug1;
-                        }
-                        sw.WriteLine(result);
-                        sw.Flush();
-                    }
-                    #endregion
-                    #region comJugada
-                    if (subdatos[1] == "JUGADA")
-                    {
-                        if (idJug1 == cli.Client.RemoteEndPoint.ToString())
-                        {
-                            if (subdatos[2] == "0")
-                            {
-                                //mesaActualizada = subdatos[3].Split('/');
-                                //string[] list_updated = subdatos[3].Split('/');
-                                //int index = list_updated.Length - 2;
-                                //Carta carta = new Carta(list_updated[index]);
-                                //listaCartasMesa.Add(carta);
-                                getCartasMesa(subdatos[3].Split('/'));
-                                turno = "maquina";
-                            }
-                            else
-                            {
-                                Jugada jugada = HacerJugada(data);
-                                if (jugada.checkBaza())
-                                {
-                                    sw.WriteLine("El jugador " + jugador1 + " ha hecho baza");
-                                    sw.Flush();
-                                    PuntosJugador1 = new Puntos(jugada);
-                                    sw.WriteLine(
-                                        PuntosJugador1.GetNumCartas() + "#"
-                                        + PuntosJugador1.GetNumOros() + "#"
-                                        + PuntosJugador1.GetNumSietes() + "#"
-                                        + PuntosJugador1.GetSieteOros());
-                                    sw.Flush();
-                                    foreach (Carta card in bazaMesa)
+                                    List<Carta> trick = chooseTrick(combinaciones);
+                                    if (listaCartasMesa.Count == 0)
                                     {
-                                        Carta carta = listaCartasMesa.Find(f => f.nombre.Equals(card.nombre));
-                                        if (carta != null)
-                                        {
-                                            listaCartasMesa.Remove(carta);
-                                        }
+                                        PuntosautoPlay.escobas++;
                                     }
+                                    PuntosautoPlay.addBaza(trick);
+                                }
+
+
+                                turno = idJug1;
+                            }
+                            sw.WriteLine(result);
+                            sw.Flush();
+                        }
+                        #endregion
+                        #region comJugada
+                        if (subdatos[1] == "JUGADA")
+                        {
+                            if (idJug1 == cli.Client.RemoteEndPoint.ToString())
+                            {
+                                if (subdatos[2] == "0")
+                                {
+                                    //mesaActualizada = subdatos[3].Split('/');
+                                    //string[] list_updated = subdatos[3].Split('/');
+                                    //int index = list_updated.Length - 2;
+                                    //Carta carta = new Carta(list_updated[index]);
+                                    //listaCartasMesa.Add(carta);
+                                    getCartasMesa(subdatos[3].Split('/'));
                                     turno = "maquina";
                                 }
                                 else
                                 {
-                                    sw.WriteLine("No se puede hacer baza. Intentalo de nuevo");
-                                    sw.Flush();
+                                    Jugada jugada = HacerJugada(data);
+                                    if (jugada.checkBaza())
+                                    {
+                                        sw.WriteLine("El jugador " + jugador1 + " ha hecho baza");
+                                        sw.Flush();
+                                        PuntosJugador1 = new Puntos(jugada);
+                                        sw.WriteLine(
+                                            PuntosJugador1.GetNumCartas() + "#"
+                                            + PuntosJugador1.GetNumOros() + "#"
+                                            + PuntosJugador1.GetNumSietes() + "#"
+                                            + PuntosJugador1.GetSieteOros());
+                                        sw.Flush();
+                                        foreach (Carta card in bazaMesa)
+                                        {
+                                            Carta carta = listaCartasMesa.Find(f => f.nombre.Equals(card.nombre));
+                                            if (carta != null)
+                                            {
+                                                listaCartasMesa.Remove(carta);
+                                            }
+                                        }
+                                        turno = "maquina";
+                                    }
+                                    else
+                                    {
+                                        sw.WriteLine("No se puede hacer baza. Intentalo de nuevo");
+                                        sw.Flush();
+                                    }
                                 }
                             }
                         }
-                    }
-                    #endregion
-                    #region comSENDTABLEUPDATED
-                    if (subdatos[1] == "SENDTABLEUPDATED")
-                    {
-                        mesaActualizada = subdatos[2].Split('/');
-
-                    }
-                    #endregion
-                    #region comGETTABLEUPDATED
-                    if (subdatos[1] == "GETTABLEUPDATED")
-                    {
-                        //string mesa = "";
-                        //for (int i = 0; i < mesaActualizada.Length; i++)
-                        //{
-                        //    if (!String.IsNullOrWhiteSpace(mesaActualizada[i]))
-                        //    {
-                        //        mesa += mesaActualizada[i] + "/";
-                        //    }
-                        //}
-                        //sw.WriteLine(mesa);
-                        string update = ListarCartasMesa();
-                        sw.WriteLine(update);
-                        sw.Flush();
-                    }
-                    #endregion
-                    #region comCheckCards
-                    if (subdatos[1] == "CHECKCARDS")
-                    {
-                        string numCartas = subdatos[2];
-                        if (cont == 40)
+                        #endregion
+                        #region comSENDTABLEUPDATED
+                        if (subdatos[1] == "SENDTABLEUPDATED")
                         {
-                            endGame = true;
+                            mesaActualizada = subdatos[2].Split('/');
+
                         }
-                        if (!endGame)
+                        #endregion
+                        #region comGETTABLEUPDATED
+                        if (subdatos[1] == "GETTABLEUPDATED")
                         {
-                            sw.WriteLine("OK");
+                            //string mesa = "";
+                            //for (int i = 0; i < mesaActualizada.Length; i++)
+                            //{
+                            //    if (!String.IsNullOrWhiteSpace(mesaActualizada[i]))
+                            //    {
+                            //        mesa += mesaActualizada[i] + "/";
+                            //    }
+                            //}
+                            //sw.WriteLine(mesa);
+                            string update = ListarCartasMesa();
+                            sw.WriteLine(update);
                             sw.Flush();
-                            if (numCartas == "0")
+                        }
+                        #endregion
+                        #region comCheckCards
+                        if (subdatos[1] == "CHECKCARDS")
+                        {
+                            string numCartas = subdatos[2];
+                            if (cont == 40)
                             {
+                                endGame = true;
+                            }
+                            if (!endGame)
+                            {
+                                sw.WriteLine("OK");
+                                sw.Flush();
+                                if (numCartas == "0")
+                                {
 
+                                    if (idJug1 == cli.Client.RemoteEndPoint.ToString())
+                                    {
+                                        ListaManoJugador1 = new List<Carta>();
+                                        repartecartasJug1();
+                                        sw.WriteLine(ListarCartasJugador1());
+                                        sw.Flush();
+                                    }
+                                    else
+                                    {
+                                        ListaManoautoPlay = new List<Carta>();
+                                        repartecartasAuto();
+
+                                    }
+                                }
+                            }
+                            else if (ListaManoautoPlay.Count == 0 && numCartas == "0")
+                            {
+                                sw.WriteLine("GetPoints");
+                                sw.Flush();
+                                string[] puntos = sr.ReadLine().Split('/');
+                                Console.WriteLine(puntos.ToString());
                                 if (idJug1 == cli.Client.RemoteEndPoint.ToString())
                                 {
-                                    ListaManoJugador1 = new List<Carta>();
-                                    repartecartasJug1();
-                                    sw.WriteLine(ListarCartasJugador1());
+                                    Thread.Sleep(4000);
+                                    PuntosJugador1 = new Puntos();
+                                    PuntosJugador1.escobas = Convert.ToInt16(puntos[0]);
+                                    PuntosJugador1.cartas = Convert.ToInt16(puntos[1]);
+                                    PuntosJugador1.oros = Convert.ToInt16(puntos[2]);
+                                    PuntosJugador1.sietes = Convert.ToInt16(puntos[3]);
+                                    PuntosJugador1.sieteOros = Convert.ToInt16(puntos[4]);
+                                    //PuntosautoPlay.escobas =;
+                                    PuntosautoPlay.cartas = PuntosautoPlay.GetNumCartas();
+                                    PuntosautoPlay.oros = PuntosautoPlay.GetNumOros();
+                                    PuntosautoPlay.sietes = PuntosautoPlay.GetNumSietes();
+                                    PuntosautoPlay.sieteOros = PuntosautoPlay.GetSieteOros();
+                                    ComparePoints();
+                                    string winner = Winner();
+                                    sw.WriteLine(winner);
                                     sw.Flush();
-                                }
-                                else
-                                {
-                                    ListaManoautoPlay = new List<Carta>();
-                                    repartecartasAuto();
-
+                                    break;
                                 }
                             }
-                        }
-                        else if (ListaManoautoPlay.Count == 0 && numCartas == "0")
-                        {
-                            sw.WriteLine("GetPoints");
-                            sw.Flush();
-                            string[] puntos = sr.ReadLine().Split('/');
-                            Console.WriteLine(puntos.ToString());
-                            if (idJug1 == cli.Client.RemoteEndPoint.ToString())
+                            else
                             {
-                                Thread.Sleep(4000);
-                                PuntosJugador1 = new Puntos();
-                                PuntosJugador1.escobas = Convert.ToInt16(puntos[0]);
-                                PuntosJugador1.cartas = Convert.ToInt16(puntos[1]);
-                                PuntosJugador1.oros = Convert.ToInt16(puntos[2]);
-                                PuntosJugador1.sietes = Convert.ToInt16(puntos[3]);
-                                PuntosJugador1.sieteOros = Convert.ToInt16(puntos[4]);
-                                //PuntosautoPlay.escobas =;
-                                PuntosautoPlay.cartas = PuntosautoPlay.GetNumCartas();
-                                PuntosautoPlay.oros = PuntosautoPlay.GetNumOros();
-                                PuntosautoPlay.sietes = PuntosautoPlay.GetNumSietes();
-                                PuntosautoPlay.sieteOros = PuntosautoPlay.GetSieteOros();
-                                ComparePoints();
-                                string winner = Winner();
-                                sw.WriteLine(winner);
+                                sw.WriteLine("NOK");
                                 sw.Flush();
-                                break;
                             }
                         }
-                        else
-                        {
-                            sw.WriteLine("NOK");
-                            sw.Flush();
-                        }
+                        #endregion
                     }
-                    #endregion
+                    catch (IOException error)
+                    {
+                        Console.WriteLine("Error: {0}", error.ToString());
+                        break;
+                    }
                 }
-                catch (Exception error)
-                {
-                    Console.WriteLine("Error: {0}", error.ToString());
-                    break;
-                }
+                ns.Close();
+                cli.Close();
             }
-            ns.Close();
-            cli.Close();
+            catch (Exception error)
+            {
+                Console.WriteLine("Error: {0}", error.ToString());
+                throw;
+            }
+            
         }
         private void ListenButton_Click(object sender, EventArgs e)
         {
@@ -645,14 +656,14 @@ namespace WindowsFormsApplication1
         }
         private void EsperaClientesAuto()
         {
-            TcpListener newsock = new TcpListener(IPAddress.Any, 2000);
+            newsock = new TcpListener(IPAddress.Any, 2000);
             newsock.Start();
 
             Console.WriteLine("Esperando por cliente");
 
             while (true)
             {
-                TcpClient cliente = newsock.AcceptTcpClient(); //linea bloqueante
+                cliente = newsock.AcceptTcpClient(); //linea bloqueante
                 Thread t = new Thread(() => this.ManejarClienteAuto(cliente));
                 //t.IsBackground = true;
                 t.Start();
@@ -917,30 +928,30 @@ namespace WindowsFormsApplication1
             {
                 if (PuntosJugador1.puntosTotal > PuntosautoPlay.puntosTotal)
                 {
-                    return "Enhorabuena le has ganado a la maquina";
+                    return "El ganador es el " + jugador1 + "#" + idJug1;
                 }
                 else if (PuntosJugador1.puntosTotal < PuntosautoPlay.puntosTotal)
                 {
-                    return "El ganador es la maquina";
+                    return "El ganador es la maquina#0";
                 }
                 else
                 {
-                    return "Has empatado con la maquina";
+                    return "Has empatado con la maquina#0";
                 }
             }
             else
             {
                 if (PuntosJugador1.puntosTotal > PuntosJugador2.puntosTotal)
                 {
-                    return "El ganador es el " + jugador1;
+                    return "El ganador es el " + jugador1 + "#" + idJug1;
                 }
                 else if (PuntosJugador1.puntosTotal < PuntosJugador2.puntosTotal)
                 {
-                    return "El ganador es el " + jugador2;
+                    return "El ganador es el " + jugador2 + "#" + idJug2;
                 }
                 else
                 {
-                    return "Los jugadores han empatado";
+                    return "Los jugadores han empatado#0";
                 }
             }
 
@@ -950,7 +961,7 @@ namespace WindowsFormsApplication1
             combiList = new List<List<Carta>>();
             int sum = 0;
             List<Carta> combi;
-            listaCartasMesa.Sort();
+            //listaCartasMesa.Sort();
             foreach (Carta cartaAuto in ListaManoautoPlay)
             {
                 combi = new List<Carta>();
@@ -958,23 +969,42 @@ namespace WindowsFormsApplication1
                 sum = cartaAuto.valor;
                 foreach (Carta cartaMesa in listaCartasMesa)
                 {
-                    sum = sum + cartaMesa.valor;
-                    if (sum < 15)
+                    if (cartaAuto.valor == 10 && cartaMesa.valor == 5)
                     {
                         combi.Add(cartaMesa);
+                        combiList.Add(combi);
                     }
-                    else if (sum == 15)
+                    else if (cartaAuto.valor == 9 && cartaMesa.valor == 6)
+                    {
+                        combi.Add(cartaMesa);
+                        combiList.Add(combi);
+                    }
+                    else if (cartaAuto.valor == 8 && cartaMesa.valor == 7)
                     {
                         combi.Add(cartaMesa);
                         combiList.Add(combi);
                     }
                     else
                     {
-                        sum = cartaAuto.valor;
-                        Carta carta = cartaAuto;
-                        combi = new List<Carta>();
-                        combi.Add(carta);
+                        sum = sum + cartaMesa.valor;
+                        if (sum < 15)
+                        {
+                            combi.Add(cartaMesa);
+                        }
+                        else if (sum == 15)
+                        {
+                            combi.Add(cartaMesa);
+                            combiList.Add(combi);
+                        }
+                        else
+                        {
+                            sum = cartaAuto.valor;
+                            Carta carta = cartaAuto;
+                            combi = new List<Carta>();
+                            combi.Add(carta);
+                        }
                     }
+
                 }
             }
             return combiList;
@@ -1042,6 +1072,40 @@ namespace WindowsFormsApplication1
             {
                 listaCartasMesa.Remove(trick[i]);
             }
+        }
+
+        private void buttonReset_Click(object sender, EventArgs e)
+        {
+            ListenButton.Enabled = true;
+            listaCartasMazo = new List<Carta>();
+            cont = 0;
+
+            listaCartasMesa = new List<Carta>();
+
+            cartasMesa = new string[4];
+            mesaActualizada = new string[8];
+
+            jugador1 = "";
+            idJug1 = "";
+            ListaManoJugador1 = new List<Carta>();
+            IpJug1 = "";
+            PuntosJugador1 = new Puntos();
+
+            jugador2 = "";
+            idJug2 = "";
+            ListaManoJugador2 = new List<Carta>();
+            IpJug2 = "";
+            PuntosJugador2 = new Puntos();
+
+            ListaManoautoPlay = new List<Carta>();
+            PuntosautoPlay = new Puntos();
+            combiList = new List<List<Carta>>();
+
+            bazaMesa = new List<Carta>();
+
+            turno = "";
+            endGame = false;
+            newsock.Stop();
         }
     }
 }

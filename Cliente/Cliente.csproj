@@ -89,6 +89,12 @@
   <ItemGroup>
     <None Include="Images\push_button.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\empate.jpg" />
+    <Content Include="Images\gameover.jpg" />
+    <Content Include="Images\youwin.jpg" />
+    <Content Include="Images\youWin2.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
